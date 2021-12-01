@@ -13,3 +13,6 @@ Function operation: Disjunction. Manager operation: XOR.
 ! NOTE: to measure computation time, special messages are printed to console, which can appear while user is entering their choice in prompt.
   These messages are only benchmarks, thus they do not contradict with statement that no computational messages can be printed while prompt is active.
   
+## Extra
+
+A generalization to n functions and different function arguments were implemented!
