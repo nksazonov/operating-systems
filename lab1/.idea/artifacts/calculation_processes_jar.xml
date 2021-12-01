@@ -1,0 +1,9 @@
+<component name="ArtifactManager">
+  <artifact type="jar" name="calculation_processes:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/calculation_process</output-path>
+    <root id="archive" name="calculation_processes.jar">
+      <element id="module-output" name="calculation_process" />
+      <element id="extracted-dir" path="$PROJECT_DIR$/src/calculation_process/src/lab1.jar" path-in-jar="/" />
+    </root>
+  </artifact>
+</component>

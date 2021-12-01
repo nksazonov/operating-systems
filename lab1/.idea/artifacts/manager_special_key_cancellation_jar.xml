@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="manager_special_key_cancellation:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/manager_special_key_cancellation</output-path>
+    <root id="archive" name="manager_special_key_cancellation.jar">
+      <element id="module-output" name="special_key_cancellation" />
+    </root>
+  </artifact>
+</component>

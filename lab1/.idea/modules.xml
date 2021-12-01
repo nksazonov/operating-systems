@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/src/calculation_process/calculation_process.iml" filepath="$PROJECT_DIR$/src/calculation_process/calculation_process.iml" />
+      <module fileurl="file://$PROJECT_DIR$/lab1.iml" filepath="$PROJECT_DIR$/lab1.iml" />
+      <module fileurl="file://$PROJECT_DIR$/src/periodic_prompt_cancellation/periodic_prompt_cancellation.iml" filepath="$PROJECT_DIR$/src/periodic_prompt_cancellation/periodic_prompt_cancellation.iml" />
+      <module fileurl="file://$PROJECT_DIR$/src/special_key_cancellation/special_key_cancellation.iml" filepath="$PROJECT_DIR$/src/special_key_cancellation/special_key_cancellation.iml" />
+    </modules>
+  </component>
+</project>

@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="manager_periodic_prompt_cancellation:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/manager_periodic_prompt_cancellation</output-path>
+    <root id="archive" name="manager_periodic_prompt_cancellation.jar">
+      <element id="module-output" name="periodic_prompt_cancellation" />
+    </root>
+  </artifact>
+</component>
