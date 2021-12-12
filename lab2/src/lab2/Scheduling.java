@@ -1,4 +1,4 @@
-// This file contains the main() function for the Scheduling
+package lab2;// This file contains the main() function for the Scheduling
 // simulation.  Init() initializes most of the variables by
 // reading from a provided file.  SchedulingAlgorithm.Run() is
 // called from main() to run the simulation.  Summary-Results
@@ -8,7 +8,8 @@
 // Created by Alexander Reeder, 2001 January 06
 
 import java.io.*;
-import java.util.*;
+import java.util.StringTokenizer;
+import java.util.Vector;
 
 public class Scheduling {
 
@@ -113,6 +114,7 @@ public class Scheduling {
         i++;
       }
     }
+
     result = SchedulingAlgorithm.Run(runtime, processVector, result);
     writeResults();
     System.out.println("Completed.");

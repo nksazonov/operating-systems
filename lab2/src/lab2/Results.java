@@ -1,3 +1,5 @@
+package lab2;
+
 public class Results {
   public String schedulingType;
   public String schedulingName;
