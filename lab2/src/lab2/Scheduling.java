@@ -1,11 +1,13 @@
-package lab2;// This file contains the main() function for the Scheduling
+package lab2;
+// This file contains the main() function for the Scheduling
 // simulation.  Init() initializes most of the variables by
 // reading from a provided file.  SchedulingAlgorithm.Run() is
 // called from main() to run the simulation.  Summary-Results
 // is where the summary results are written, and Summary-Processes
 // is where the process scheduling summary is written.
 
-// Created by Alexander Reeder, 2001 January 06
+// Created by Alexander Reeder, 2001 January 06,
+// Modified by Nikita Sazonov, 2021 December 12
 
 import java.io.*;
 import java.util.StringTokenizer;
@@ -19,7 +21,7 @@ public class Scheduling {
   private static int runtime = 1000;
   private static final Vector<Process> processVector = new Vector<>();
   private static Results result = new Results("null","null",0);
-  private static final String resultsFile = "Summary-Results";
+  private static final String resultsFile = "Summary-Results.txt";
 
   private static void Init(String file) {
     File f = new File(file);
@@ -77,7 +79,7 @@ public class Scheduling {
     int size = processVector.size();
     for (i = 0; i < size; i++) {
       Process process = processVector.elementAt(i);
-      System.out.println("process " + i + " " + process.cputime + " " + process.ioblocking + " " + process.cpudone + " " + process.numblocked);
+      System.out.println("process " + i + " " + process.cpuTime + " " + process.ioBlocking + " " + process.cpuDone + " " + process.numBlocked);
     }
     System.out.println("runtime " + runtime);
   }
@@ -140,31 +142,31 @@ public class Scheduling {
           out.print("\t");
         }
 
-        out.print(process.cputime);
+        out.print(process.cpuTime);
 
-        if (process.cputime < 100) {
+        if (process.cpuTime < 100) {
           out.print(" (ms)\t\t");
         } else {
           out.print(" (ms)\t");
         }
 
-        out.print(process.ioblocking);
+        out.print(process.ioBlocking);
 
-        if (process.ioblocking < 100) {
+        if (process.ioBlocking < 100) {
           out.print(" (ms)\t\t");
         } else {
           out.print(" (ms)\t");
         }
 
-        out.print(process.cpudone);
+        out.print(process.cpuDone);
 
-        if (process.cpudone < 100) {
+        if (process.cpuDone < 100) {
           out.print(" (ms)\t\t");
         } else {
           out.print(" (ms)\t");
         }
 
-        out.println(process.numblocked + " times");
+        out.println(process.numBlocked + " times");
       }
       out.close();
     } catch (IOException e) {

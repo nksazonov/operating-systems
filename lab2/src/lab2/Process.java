@@ -1,26 +1,40 @@
 package lab2;
 
-public class Process {
-  public int cputime;
-  public int ioblocking;
-  public int cpudone;
-  public int ionext;
-  public int numblocked;
+public class Process implements Comparable<Process> {
+  public int cpuTime;
+  public int ioBlocking;
+  public int cpuDone;
+  public int ioNext;
+  public int numBlocked;
 
-  public Process(int cputime, int ioblocking, int cpudone, int ionext, int numblocked) {
+  public Process(int cpuTime, int ioBlocking, int cpuDone, int ioNext, int numBlocked) {
     // CPU (burst) time for process to be completed
-    this.cputime = cputime;
+    this.cpuTime = cpuTime;
 
     // delay before process blocking for I/O
-    this.ioblocking = ioblocking;
+    this.ioBlocking = ioBlocking;
 
     // how long the process has been executed
-    this.cpudone = cpudone;
+    this.cpuDone = cpuDone;
 
     // how long the process has been executed before it is gone to I/O blocking" state
-    this.ionext = ionext;
+    this.ioNext = ioNext;
 
     // how many times the process has gone to "I/O blocking" state
-    this.numblocked = numblocked;
-  } 	
+    this.numBlocked = numBlocked;
+  }
+
+  public boolean isDone() {
+    return cpuDone >= cpuTime;
+  }
+
+  @Override
+  public int compareTo(Process other) {
+    // cpuTime is considered as job time
+    if (this.cpuTime == other.cpuTime) {
+      return Integer.compare(this.ioBlocking, other.ioBlocking);
+    }
+
+    return Integer.compare(this.cpuTime, other.cpuTime);
+  }
 }
