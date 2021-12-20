@@ -1,5 +1,7 @@
 package lab3;
 
+import java.util.Random;
+
 public class Common {
 
   static public long s2l ( String s ) 
@@ -44,8 +46,7 @@ public class Common {
   {
     long i = -1;
 
-    java.util.Random generator = new
-    java.util.Random(System.currentTimeMillis());
+    Random generator = new Random(System.nanoTime());
     while (i > MAX || i < 0)
     {
       int intOne = generator.nextInt();

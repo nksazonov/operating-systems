@@ -243,7 +243,7 @@ public class Kernel extends Thread
           tmp = st.nextToken();
           if (tmp.startsWith("random")) 
           {
-            instructVector.addElement(new Instruction(command,Common.randomLong( address_limit )));
+            instructVector.addElement(new Instruction(command, Common.randomLong( address_limit )));
           } 
           else 
           { 
