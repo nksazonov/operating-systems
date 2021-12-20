@@ -4,8 +4,6 @@
    page replacement algorithm.
 */
 
-// This PageFault file is an example of the FIFO Page Replacement
-// Algorithm as described in the Memory Management section.
 package lab3;
 
 import java.util.*;
