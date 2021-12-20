@@ -1,20 +1,14 @@
 package lab3;
 
-import java.util.Vector;
-
-public class Virtual2Physical 
+public class Virtual2Physical
 {
-  public static int pageNum ( long memaddr , int numpages , long block ) 
+  public static int pageNum ( long memAddr , int numPages , long block )
   {
-    int i = 0;
-    long high = 0;
-    long low = 0;
-    
-    for (i = 0; i <= numpages; i++) 
+    for (int i = 0; i <= numPages; i++)
     {
-      low = block * i;
-      high = block * ( i + 1 ); 
-      if ( low <= memaddr && memaddr < high ) 
+      long low = block * i;
+      long high = block * ( i + 1 );
+      if ( low <= memAddr && memAddr < high )
       {
         return i;
       }

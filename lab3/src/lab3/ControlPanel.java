@@ -1,6 +1,5 @@
 package lab3;
 
-import java.applet.*;
 import java.awt.*;
 
 public class ControlPanel extends Frame 
@@ -953,8 +952,8 @@ public class ControlPanel extends Frame
     MValueLabel.setText( Integer.toString( page.M ) );
     inMemTimeValueLabel.setText( Integer.toString( page.inMemTime ) );
     lastTouchTimeValueLabel.setText( Integer.toString( page.lastTouchTime ) );
-    lowValueLabel.setText(Long.toString( page.low , Kernel.addressradix ) );
-    highValueLabel.setText(Long.toString( page.high , Kernel.addressradix ) );
+    lowValueLabel.setText(Long.toString( page.low , Kernel.addressRadix) );
+    highValueLabel.setText(Long.toString( page.high , Kernel.addressRadix) );
   }
 
   public void setStatus(String status) {
@@ -1482,10 +1481,6 @@ public class ControlPanel extends Frame
     else if ( physicalPage == 63)
     {
       l63.setText( null );
-    } 
-    else 
-    {
-      return;
     }
   }
 
@@ -1507,7 +1502,7 @@ public class ControlPanel extends Frame
     {
       setStatus( "STEP" );
       kernel.step();
-      if (kernel.runcycles == kernel.runs) {
+      if (kernel.runCycles == kernel.runs) {
          stepButton.disable();
          runButton.disable();
       }

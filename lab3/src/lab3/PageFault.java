@@ -13,13 +13,13 @@ import java.util.*;
 public class PageFault {
 
   /**
-   * The page replacement algorithm for the memory management sumulator.
+   * The page replacement algorithm for the memory management simulator.
    * This method gets called whenever a page needs to be replaced.
    * <p>
    * The page replacement algorithm included with the simulator is 
-   * FIFO (first-in first-out).  A while or for loop should be used 
-   * to search through the current memory contents for a canidate 
-   * replacement page.  In the case of FIFO the while loop is used 
+   * FIFO (first-in first-out). A while or for loop should be used
+   * to search through the current memory contents for a candidate
+   * replacement page. In the case of FIFO the while loop is used
    * to find the proper page while making sure that virtPageNum is 
    * not exceeded.
    * <pre>
@@ -34,14 +34,14 @@ public class PageFault {
    *   controlPanel.removePhysicalPage( oldestPage )
    * </pre>
    * Once a page is removed from memory it must also be reflected 
-   * graphically.  This line does so by removing the physical page 
-   * at the oldestPage value.  The page which will be added into 
+   * graphically. This line does so by removing the physical page
+   * at the oldestPage value. The page which will be added into
    * memory must also be displayed through the addPhysicalPage 
    * function call.  One must also remember to reset the values of 
    * the page which has just been removed from memory.
    *
    * @param mem is the vector which contains the contents of the pages 
-   *   in memory being simulated.  mem should be searched to find the 
+   *   in memory being simulated. mem should be searched to find the
    *   proper page to remove, and modified to reflect any changes.  
    * @param virtPageNum is the number of virtual pages in the 
    *   simulator (set in Kernel.java).  
@@ -50,7 +50,7 @@ public class PageFault {
    * @param controlPanel represents the graphical element of the 
    *   simulator, and allows one to modify the current display.
    */
-  public static void replacePage ( Vector mem , int virtPageNum , int replacePageNum , ControlPanel controlPanel ) 
+  public static void replacePage ( Vector<Page> mem, int virtPageNum, int replacePageNum, ControlPanel controlPanel )
   {
     int count = 0;
     int oldestPage = -1;
@@ -59,8 +59,9 @@ public class PageFault {
     int map_count = 0;
     boolean mapped = false;
 
-    while ( ! (mapped) || count != virtPageNum ) {
-      Page page = ( Page ) mem.elementAt( count );
+    while ( !mapped || count != virtPageNum ) {
+      Page page = mem.elementAt( count );
+
       if ( page.physical != -1 ) {
         if (firstPage == -1) {
           firstPage = count;
@@ -71,19 +72,23 @@ public class PageFault {
           mapped = true;
         }
       }
+
       count++;
+
       if ( count == virtPageNum ) {
         mapped = true;
       }
     }
+
     if (oldestPage == -1) {
       oldestPage = firstPage;
     }
-    Page page = ( Page ) mem.elementAt( oldestPage );
-    Page nextpage = ( Page ) mem.elementAt( replacePageNum );
+
+    Page page = mem.elementAt( oldestPage );
+    Page nextPage = mem.elementAt( replacePageNum );
     controlPanel.removePhysicalPage( oldestPage );
-    nextpage.physical = page.physical;
-    controlPanel.addPhysicalPage( nextpage.physical , replacePageNum );
+    nextPage.physical = page.physical;
+    controlPanel.addPhysicalPage( nextPage.physical , replacePageNum );
     page.inMemTime = 0;
     page.lastTouchTime = 0;
     page.R = 0;

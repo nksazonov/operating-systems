@@ -1,10 +1,7 @@
 // The main MemoryManagement program, created by Alexander Reeder, 2000 Nov 19
 package lab3;
 
-import java.applet.*;
-import java.awt.*;
-import java.io.*;
-import java.util.*;
+import java.io.File;
 
 public class MemoryManagement 
 {
@@ -21,31 +18,13 @@ public class MemoryManagement
 
     File f = new File( args[0] );
 
-    if ( ! ( f.exists() ) ) 
-    {
-      System.out.println( "MemoryM: error, file '" + f.getName() + "' does not exist." );
-      System.exit( -1 );
-    }
-    if ( ! ( f.canRead() ) ) 
-    {
-      System.out.println( "MemoryM: error, read of " + f.getName() + " failed." );
-      System.exit( -1 );
-    }
+    assertExists(f);
 
     if ( args.length == 2 ) 
     {
       f = new File( args[1] );
 
-      if ( ! ( f.exists() ) ) 
-      {
-        System.out.println( "MemoryM: error, file '" + f.getName() + "' does not exist." );
-        System.exit( -1 );
-      }
-      if ( ! ( f.canRead() ) ) 
-      {
-        System.out.println( "MemoryM: error, read of " + f.getName() + " failed." );
-        System.exit( -1 );
-      } 
+      assertExists(f);
     }
 
     kernel = new Kernel();
@@ -57,6 +36,19 @@ public class MemoryManagement
     else
     {
       controlPanel.init( kernel , args[0] , args[1] );
+    }
+  }
+
+  private static void assertExists(File f) {
+    if (!f.exists())
+    {
+      System.out.println( "MemoryM: error, file '" + f.getName() + "' does not exist." );
+      System.exit( -1 );
+    }
+    if (!f.canRead())
+    {
+      System.out.println( "MemoryM: error, read of " + f.getName() + " failed." );
+      System.exit( -1 );
     }
   }
 }

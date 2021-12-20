@@ -11,20 +11,19 @@ public class Kernel extends Thread
   private static int virtPageNum = 63;
 
   private String output = null;
-  private static final String lineSeparator = 
-    System.getProperty("line.separator");
+  private static final String lineSeparator = System.getProperty("line.separator");
   private String command_file;
   private String config_file;
   private ControlPanel controlPanel ;
-  private Vector memVector = new Vector();
-  private Vector instructVector = new Vector();
+  private final Vector<Page> memVector = new Vector<>();
+  private final Vector<Instruction> instructVector = new Vector<>();
   private String status;
   private boolean doStdoutLog = false;
   private boolean doFileLog = false;
   public int runs;
-  public int runcycles;
+  public int runCycles;
   public long block = (int) Math.pow(2,12);
-  public static byte addressradix = 10;
+  public static byte addressRadix = 10;
 
   public void init( String commands , String config )  
   {
@@ -58,7 +57,7 @@ public class Kernel extends Thread
         DataInputStream in = new DataInputStream(new FileInputStream(f));
         while ((line = in.readLine()) != null) 
         {
-          if (line.startsWith("numpages")) 
+          if (line.startsWith("numPages"))
           { 
             StringTokenizer st = new StringTokenizer(line);
             while (st.hasMoreTokens()) 
@@ -67,7 +66,7 @@ public class Kernel extends Thread
               virtPageNum = Common.s2i(st.nextToken()) - 1;
               if ( virtPageNum < 2 || virtPageNum > 63 )
               {
-                System.out.println("MemoryManagement: numpages out of bounds.");
+                System.out.println("MemoryManagement: numPages out of bounds.");
                 System.exit(-1);
               }
               address_limit = (block * virtPageNum+1)-1;
@@ -133,7 +132,7 @@ public class Kernel extends Thread
                 System.out.println("MemoryManagement: Invalid lastTouchTime in " + config);
                 System.exit(-1);
               }
-              Page page = (Page) memVector.elementAt(id);
+              Page page = memVector.elementAt(id);
               page.physical = physical;
               page.R = R;
               page.M = M;
@@ -159,10 +158,11 @@ public class Kernel extends Thread
             {
               tmp = st.nextToken();
             }
+            assert tmp != null;
             if ( tmp.startsWith( "log_file" ) )
             {
               doFileLog = false;
-              output = "tracefile";
+              output = "tracefile.txt";
             }              
             else
             {
@@ -171,7 +171,7 @@ public class Kernel extends Thread
               output = tmp;
             }
           }
-          if (line.startsWith("pagesize")) 
+          if (line.startsWith("pagesize"))
           { 
             StringTokenizer st = new StringTokenizer(line);
             while (st.hasMoreTokens()) 
@@ -180,7 +180,7 @@ public class Kernel extends Thread
               tmp = st.nextToken();
               if ( tmp.startsWith( "power" ) )
               {
-                power = (double) Integer.parseInt(st.nextToken());
+                power = Integer.parseInt(st.nextToken());
                 block = (int) Math.pow(2,power);
               }
               else
@@ -196,20 +196,20 @@ public class Kernel extends Thread
             }
             for (i = 0; i <= virtPageNum; i++) 
             {
-              Page page = (Page) memVector.elementAt(i);
+              Page page = memVector.elementAt(i);
               page.high = (block * (i + 1))-1;
               page.low = block * i;
             }
           }
-          if (line.startsWith("addressradix")) 
+          if (line.startsWith("addressRadix"))
           { 
             StringTokenizer st = new StringTokenizer(line);
             while (st.hasMoreTokens()) 
             {
               tmp = st.nextToken();
               tmp = st.nextToken();
-              addressradix = Byte.parseByte(tmp);
-              if ( addressradix < 0 || addressradix > 20 )
+              addressRadix = Byte.parseByte(tmp);
+              if ( addressRadix < 0 || addressRadix > 20 )
               {
                 System.out.println("MemoryManagement: addressradix out of bounds.");
                 System.exit(-1);
@@ -218,7 +218,9 @@ public class Kernel extends Thread
           }
         }
         in.close();
-      } catch (IOException e) { /* Handle exceptions */ }
+      } catch (IOException e) {
+        e.printStackTrace();
+      }
     }
     f = new File ( commands );
     try 
@@ -271,9 +273,11 @@ public class Kernel extends Thread
         }
       }
       in.close();
-    } catch (IOException e) { /* Handle exceptions */ }
-    runcycles = instructVector.size();
-    if ( runcycles < 1 )
+    } catch (IOException e) {
+      e.printStackTrace();
+    }
+    runCycles = instructVector.size();
+    if ( runCycles < 1 )
     {
       System.out.println("MemoryManagement: no instructions present for execution.");
       System.exit(-1);
@@ -286,14 +290,14 @@ public class Kernel extends Thread
     runs = 0;
     for (i = 0; i < virtPageNum; i++) 
     {
-      Page page = (Page) memVector.elementAt(i);
+      Page page = memVector.elementAt(i);
       if ( page.physical != -1 )
       {
         map_count++;
       }
       for (j = 0; j < virtPageNum; j++) 
       {
-        Page tmp_page = (Page) memVector.elementAt(j);
+        Page tmp_page = memVector.elementAt(j);
         if (tmp_page.physical == page.physical && page.physical >= 0)
         {
           physical_count++;
@@ -310,7 +314,7 @@ public class Kernel extends Thread
     {
       for (i = 0; i < virtPageNum; i++) 
       {
-        Page page = (Page) memVector.elementAt(i);
+        Page page = memVector.elementAt(i);
         if ( page.physical == -1 && map_count < ( virtPageNum + 1 ) / 2 )
         {
           page.physical = i;
@@ -320,7 +324,7 @@ public class Kernel extends Thread
     }
     for (i = 0; i < virtPageNum; i++) 
     {
-      Page page = (Page) memVector.elementAt(i);
+      Page page = memVector.elementAt(i);
       if (page.physical == -1) 
       {
         controlPanel.removePhysicalPage( i );
@@ -333,7 +337,7 @@ public class Kernel extends Thread
     for (i = 0; i < instructVector.size(); i++) 
     {
       high = block * virtPageNum;
-      Instruction instruct = ( Instruction ) instructVector.elementAt( i );
+      Instruction instruct = instructVector.elementAt( i );
       if ( instruct.addr < 0 || instruct.addr > high )
       {
         System.out.println("MemoryManagement: Instruction (" + instruct.inst + " " + instruct.addr + ") out of bounds.");
@@ -349,14 +353,14 @@ public class Kernel extends Thread
 
   public void getPage(int pageNum) 
   {
-    Page page = ( Page ) memVector.elementAt( pageNum );
+    Page page = memVector.elementAt( pageNum );
     controlPanel.paintPage( page );
   }
 
   private void printLogFile(String message)
   {
     String line;
-    String temp = "";
+    StringBuilder temp = new StringBuilder();
 
     File trace = new File(output);
     if (trace.exists()) 
@@ -365,7 +369,7 @@ public class Kernel extends Thread
       {
         DataInputStream in = new DataInputStream( new FileInputStream( output ) );
         while ((line = in.readLine()) != null) {
-          temp = temp + line + lineSeparator;
+          temp.append(line).append(lineSeparator);
         }
         in.close();
       }
@@ -390,7 +394,7 @@ public class Kernel extends Thread
   public void run()
   {
     step();
-    while (runs != runcycles) 
+    while (runs != runCycles)
     {
       try 
       {
@@ -406,28 +410,28 @@ public class Kernel extends Thread
 
   public void step()
   {
-    int i = 0;
+    int i;
 
-    Instruction instruct = ( Instruction ) instructVector.elementAt( runs );
+    Instruction instruct = instructVector.elementAt( runs );
     controlPanel.instructionValueLabel.setText( instruct.inst );
-    controlPanel.addressValueLabel.setText( Long.toString( instruct.addr , addressradix ) );
+    controlPanel.addressValueLabel.setText( Long.toString( instruct.addr , addressRadix) );
     getPage( Virtual2Physical.pageNum( instruct.addr , virtPageNum , block ) );
-    if ( controlPanel.pageFaultValueLabel.getText() == "YES" ) 
+    if (Objects.equals(controlPanel.pageFaultValueLabel.getText(), "YES"))
     {
       controlPanel.pageFaultValueLabel.setText( "NO" );
     }
     if ( instruct.inst.startsWith( "READ" ) ) 
     {
-      Page page = ( Page ) memVector.elementAt( Virtual2Physical.pageNum( instruct.addr , virtPageNum , block ) );
+      Page page = memVector.elementAt( Virtual2Physical.pageNum( instruct.addr , virtPageNum , block ) );
       if ( page.physical == -1 ) 
       {
         if ( doFileLog )
         {
-          printLogFile( "READ " + Long.toString(instruct.addr , addressradix) + " ... page fault" );
+          printLogFile( "READ " + Long.toString(instruct.addr , addressRadix) + " ... page fault" );
         }
         if ( doStdoutLog )
         {
-          System.out.println( "READ " + Long.toString(instruct.addr , addressradix) + " ... page fault" );
+          System.out.println( "READ " + Long.toString(instruct.addr , addressRadix) + " ... page fault" );
         }
         PageFault.replacePage( memVector , virtPageNum , Virtual2Physical.pageNum( instruct.addr , virtPageNum , block ) , controlPanel );
         controlPanel.pageFaultValueLabel.setText( "YES" );
@@ -438,26 +442,26 @@ public class Kernel extends Thread
         page.lastTouchTime = 0;   
         if ( doFileLog )
         {
-          printLogFile( "READ " + Long.toString( instruct.addr , addressradix ) + " ... okay" );
+          printLogFile( "READ " + Long.toString( instruct.addr , addressRadix) + " ... okay" );
         }
         if ( doStdoutLog )
         {
-          System.out.println( "READ " + Long.toString( instruct.addr , addressradix ) + " ... okay" );
+          System.out.println( "READ " + Long.toString( instruct.addr , addressRadix) + " ... okay" );
         }
       }
     }
     if ( instruct.inst.startsWith( "WRITE" ) ) 
     {
-      Page page = ( Page ) memVector.elementAt( Virtual2Physical.pageNum( instruct.addr , virtPageNum , block ) );
+      Page page = memVector.elementAt( Virtual2Physical.pageNum( instruct.addr , virtPageNum , block ) );
       if ( page.physical == -1 ) 
       {
         if ( doFileLog )
         {
-          printLogFile( "WRITE " + Long.toString(instruct.addr , addressradix) + " ... page fault" );
+          printLogFile( "WRITE " + Long.toString(instruct.addr , addressRadix) + " ... page fault" );
         }
         if ( doStdoutLog )
         {
-           System.out.println( "WRITE " + Long.toString(instruct.addr , addressradix) + " ... page fault" );
+           System.out.println( "WRITE " + Long.toString(instruct.addr , addressRadix) + " ... page fault" );
         }
         PageFault.replacePage( memVector , virtPageNum , Virtual2Physical.pageNum( instruct.addr , virtPageNum , block ) , controlPanel );          controlPanel.pageFaultValueLabel.setText( "YES" );
       } 
@@ -467,17 +471,17 @@ public class Kernel extends Thread
         page.lastTouchTime = 0;
         if ( doFileLog )
         {
-          printLogFile( "WRITE " + Long.toString(instruct.addr , addressradix) + " ... okay" );
+          printLogFile( "WRITE " + Long.toString(instruct.addr , addressRadix) + " ... okay" );
         }
         if ( doStdoutLog )
         {
-          System.out.println( "WRITE " + Long.toString(instruct.addr , addressradix) + " ... okay" );
+          System.out.println( "WRITE " + Long.toString(instruct.addr , addressRadix) + " ... okay" );
         }
       }
     }
     for ( i = 0; i < virtPageNum; i++ ) 
     {
-      Page page = ( Page ) memVector.elementAt( i );
+      Page page = memVector.elementAt( i );
       if ( page.R == 1 && page.lastTouchTime == 10 ) 
       {
         page.R = 0;
@@ -489,7 +493,7 @@ public class Kernel extends Thread
       }
     }
     runs++;
-    controlPanel.timeValueLabel.setText( Integer.toString( runs*10 ) + " (ns)" );
+    controlPanel.timeValueLabel.setText(runs * 10 + " (ns)" );
   }
 
   public void reset() {
